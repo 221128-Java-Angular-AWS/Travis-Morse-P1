@@ -49,7 +49,7 @@ public class UserDao {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
-            pstmt.setString(3, user.getRole());
+            pstmt.setString(3, "employee");
             pstmt.setString(4, user.getEmail());
             pstmt.setString(5, user.getPassword());
             pstmt.executeUpdate();
@@ -61,6 +61,22 @@ public class UserDao {
         }
     }
 
+    public Boolean checkEmailAvailable(String email) {
+        try {
+            String sql = "SELECT * FROM users WHERE email = ? LIMIT 1;";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, email);
+            ResultSet results = pstmt.executeQuery();
+            if (results.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            //TODO: update exception handling
+            throw new RuntimeException(e);
+        }
+    }
     public User read(Integer userID) {
         User user = new User();
 

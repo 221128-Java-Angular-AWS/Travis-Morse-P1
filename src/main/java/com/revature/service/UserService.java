@@ -19,6 +19,7 @@ public class UserService {
         userDao.create(user);
     }
 
+    public Boolean checkEmailAvailable(String email) { return userDao.checkEmailAvailable(email); }
     public User getUserByID(Integer userID) {
         return userDao.read(userID);
     }
