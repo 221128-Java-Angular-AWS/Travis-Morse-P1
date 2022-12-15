@@ -15,21 +15,18 @@ public class ConnectionManager {
 
     public static Connection getConnection() {
         if (connection == null) {
-//            connect();
+            connect();
         }
         return connection;
     }
 
-    private void connect() {
+    private static void connect() {
         try {
             // TODO ask about this stuff
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             InputStream input = loader.getResourceAsStream("connection.properties");
             Properties props = new Properties();
             props.load(input);
-
-            Class.forName(props.getProperty("driver")); // Weird error prevention
-
             StringBuilder builder = new StringBuilder();
             builder.append("jdbc:postgresql://");
             builder.append(props.getProperty("host"));
@@ -42,11 +39,14 @@ public class ConnectionManager {
             builder.append("&password=");
             builder.append(props.getProperty("password"));
 
+            Class.forName(props.getProperty("driver")); // Weird error prevention
+
             connection = DriverManager.getConnection(builder.toString());
 
         }
         catch (Exception e) { // TODO actually figure out exceptions
-            System.out.print("Oops, you broke it");
+            System.out.println("Oops, you broke it");
+            e.printStackTrace();
         }
     }
 }

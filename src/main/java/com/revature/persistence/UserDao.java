@@ -11,10 +11,38 @@ public class UserDao {
 
     private Connection connection;
 
-    private UserDao() {
+    public UserDao() {
         this.connection = ConnectionManager.getConnection();
     }
 
+    public Boolean authenticateUser(String email, String password) {
+        // TODO: hash and salt?
+        try {
+            String sql = "SELECT * FROM users WHERE email = ?;";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, email);
+            ResultSet results = pstmt.executeQuery();
+            // TODO: create userNotFound exception and check results.next()
+
+            User user = new User(
+                    results.getInt("user_id"),
+                    results.getString("first_name"),
+                    results.getString("last_name"),
+                    results.getString("role"),
+                    results.getString("email"),
+                    results.getString("password")
+            );
+            // TODO: create incorrectPassword exception and implement
+            if (password.equals(user.getPassword())) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public void create(User user) {
         try {
             String sql = "INSERT INTO users (first_name, last_name, role, email, password) VALUES (?, ?, ?, ?, ?);";

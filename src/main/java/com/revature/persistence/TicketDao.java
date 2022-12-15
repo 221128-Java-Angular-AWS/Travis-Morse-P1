@@ -6,12 +6,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TicketDao {
 
     private Connection connection;
 
-    private TicketDao() {
+    public TicketDao() {
         this.connection = ConnectionManager.getConnection();
     }
 
@@ -34,7 +36,7 @@ public class TicketDao {
         }
     }
 
-    public Ticket read(Integer ticketID) {
+    public Ticket getTicketByID(Integer ticketID) {
         Ticket ticket = new Ticket();
 
         try {
@@ -58,6 +60,32 @@ public class TicketDao {
         }
 
         return ticket;
+    }
+
+    public Set<Ticket> getUserTicketSet(Integer userID) {
+        Set<Ticket> userTicketSet = new HashSet<Ticket>();
+        try {
+            String sql = "SELECT * FROM tickets WHERE employee = ?;";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userID);
+            ResultSet results = pstmt.executeQuery();
+
+            while (results.next()) {
+                userTicketSet.add(new Ticket(
+                        results.getInt("ticket_id"),
+                        results.getInt("employee"),
+                        results.getFloat("amount"),
+                        results.getString("description"),
+                        results.getString("status"),
+                        results.getDate("date_submitted"),
+                        results.getInt("reviewed_by")
+                ));
+            }
+        } catch (SQLException e) {
+            //TODO: update exception handling
+            throw new RuntimeException(e);
+        }
+        return userTicketSet;
     }
 
     public void update(Ticket ticket) {
