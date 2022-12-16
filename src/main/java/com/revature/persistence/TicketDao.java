@@ -19,14 +19,16 @@ public class TicketDao {
 
     public void create(Ticket ticket) {
         try {
-            String sql = "INSERT INTO tickets (employee, amount, description, status, dateSubmitted, reviewedBy) VALUES (?, ?, ?, ?, ?, ?);";
+            System.out.println("Ticket received at dao:");
+            System.out.println(ticket);
+            String sql = "INSERT INTO tickets (employee, amount, description, status, date_submitted) VALUES (?, ?, ?, ?, ?);";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, ticket.getEmployee());
             pstmt.setFloat(2, ticket.getAmount());
             pstmt.setString(3, ticket.getDescription());
             pstmt.setString(4, ticket.getStatus());
             pstmt.setDate(5, ticket.getDateSubmitted());
-            pstmt.setInt(6, ticket.getReviewedBy());
+//            pstmt.setInt(6, ticket.getReviewedBy());
             pstmt.executeUpdate();
 
 

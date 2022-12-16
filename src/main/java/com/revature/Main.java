@@ -1,7 +1,10 @@
 package com.revature;
 
+import com.revature.persistence.TicketDao;
 import com.revature.persistence.UserDao;
+import com.revature.pojos.Ticket;
 import com.revature.pojos.User;
+import com.revature.service.TicketService;
 import com.revature.service.UserService;
 import io.javalin.Javalin;
 
@@ -39,10 +42,17 @@ public class Main
 
         webApp.post("/createNewUser", ctx -> {
             UserService userService = new UserService(new UserDao());
-            System.out.println(ctx.body());
             User user = ctx.bodyAsClass(User.class);
-            System.out.println(user);
             userService.createNewUser(user);
+            ctx.status(201);
+        });
+
+        webApp.post("/createNewTicket", ctx -> {
+            System.out.println("Message body:");
+            System.out.println(ctx.body());
+            TicketService ticketService = new TicketService(new TicketDao());
+            Ticket ticket = ctx.bodyAsClass(Ticket.class);
+            ticketService.createNewTicket(ticket);
             ctx.status(201);
         });
 

@@ -13,9 +13,11 @@ public class User {
 
 
     public User() {
+        System.out.println("Default constructor");
     }
 
     public User(String firstName, String lastName, String email, String password) {
+        System.out.println("4 args constructor");
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = "employee";

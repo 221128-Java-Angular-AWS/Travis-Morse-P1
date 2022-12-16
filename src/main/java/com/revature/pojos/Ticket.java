@@ -12,8 +12,20 @@ public class Ticket {
     private Date dateSubmitted;
     private Integer reviewedBy;
 
-    public Ticket(){};
+    public Ticket(){
+        this.status = "pending";
+        java.util.Date today = new java.util.Date();
+        this.dateSubmitted = new Date(today.getTime());
+    };
 
+    public Ticket(Integer employee, Float amount, String description) {
+        this.employee = employee;
+        this.amount = amount;
+        this.description = description;
+        this.status = "pending";
+        java.util.Date today = new java.util.Date();
+        this.dateSubmitted = new Date(today.getTime());
+    }
     public Ticket(Integer ticketID, Integer employee, Float amount, String description, String status, Date dateSubmitted, Integer reviewedBy) {
         this.ticketID = ticketID;
         this.employee = employee;
