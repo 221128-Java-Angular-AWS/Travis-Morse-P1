@@ -109,6 +109,46 @@ public class TicketDao {
         }
     }
 
+    public void updateTicketStatus(Ticket ticket, String status, Integer reviewedBy) {
+        try {
+            String sql = "UPDATE tickets SET status = ?, reviewed_by = ? WHERE ticket_id = ?;";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setString(1, status);
+            pstmt.setInt(2, reviewedBy);
+            pstmt.setInt(3, ticket.getTicketID());
+            pstmt.executeUpdate();
+
+
+        } catch (SQLException e) {
+            // TODO improve exception handling
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Ticket getNextTicketInQueue() {
+        try {
+            String sql = "SELECT * FROM tickets WHERE status = 'pending' ORDER BY date_submitted LIMIT 1;";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            ResultSet results = pstmt.executeQuery();
+            results.next();
+            System.out.println("Results:");
+            System.out.println(results);
+            Ticket ticket = new Ticket(
+                        results.getInt("ticket_id"),
+                        results.getInt("employee"),
+                        results.getFloat("amount"),
+                        results.getString("description"),
+                        results.getString("status"),
+                        results.getDate("date_submitted"),
+                        results.getInt("reviewed_by")
+                );
+
+            return ticket;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void delete(Integer ticket_id) {
         try {
             String sql = "DELETE FROM tickets WHERE ticket_id = ?;";

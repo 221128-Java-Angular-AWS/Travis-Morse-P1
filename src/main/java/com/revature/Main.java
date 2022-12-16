@@ -48,13 +48,29 @@ public class Main
         });
 
         webApp.post("/createNewTicket", ctx -> {
-            System.out.println("Message body:");
-            System.out.println(ctx.body());
             TicketService ticketService = new TicketService(new TicketDao());
             Ticket ticket = ctx.bodyAsClass(Ticket.class);
             ticketService.createNewTicket(ticket);
             ctx.status(201);
         });
+
+        webApp.put("/updateTicketStatus", ctx -> {
+            TicketService ticketService = new TicketService(new TicketDao());
+            Integer ticketID = Integer.parseInt(ctx.queryParam("ticketID"));
+            String status = ctx.queryParam("status");
+            Integer reviewedBy = Integer.parseInt(ctx.queryParam("reviewedBy"));
+            Ticket ticket = ticketService.getTicketById(ticketID);
+            ticketService.updateTicketStatus(ticket, status, reviewedBy);
+            ctx.status(200);
+        });
+
+        webApp.get("/getNextTicketInQueue", ctx -> {
+            TicketService ticketService = new TicketService(new TicketDao());
+            ctx.json(ticketService.getNextTicketInQueue());
+            ctx.status(200);
+        });
+    }
+}
 
 
 
@@ -104,5 +120,4 @@ public class Main
 //            //TODO: try/catch this in case of db error
 //            System.out.println("Done! You are now registered.");
 //        }
-    }
-}
+

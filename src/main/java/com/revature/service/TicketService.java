@@ -20,6 +20,8 @@ public class TicketService {
         return ticketDao.getTicketByID(ticketID);
     }
 
+    public Ticket getNextTicketInQueue() { return ticketDao.getNextTicketInQueue(); }
+
     public Set<Ticket> getUserTicketSet(Integer userID) {
         return ticketDao.getUserTicketSet(userID);
     }
@@ -27,6 +29,8 @@ public class TicketService {
     public void updateTicket(Ticket ticket) {
         ticketDao.update(ticket);
     }
+
+    public void updateTicketStatus(Ticket ticket, String status, Integer reviewedBy) { ticketDao.updateTicketStatus(ticket, status, reviewedBy);}
 
     public void deleteTicket(Integer ticketID) {
         ticketDao.delete(ticketID);
