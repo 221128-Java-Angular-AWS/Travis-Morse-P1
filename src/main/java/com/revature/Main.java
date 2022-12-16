@@ -69,6 +69,13 @@ public class Main
             ctx.json(ticketService.getNextTicketInQueue());
             ctx.status(200);
         });
+
+        webApp.get("/getPreviousTickets", ctx -> {
+           TicketService ticketService = new TicketService(new TicketDao());
+           Integer userID = Integer.parseInt(ctx.queryParam("userID"));
+           ctx.json(ticketService.getPreviousTickets(userID));
+           ctx.status(200);
+        });
     }
 }
 

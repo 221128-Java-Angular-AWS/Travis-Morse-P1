@@ -64,10 +64,10 @@ public class TicketDao {
         return ticket;
     }
 
-    public Set<Ticket> getUserTicketSet(Integer userID) {
+    public Set<Ticket> getPreviousTickets(Integer userID) {
         Set<Ticket> userTicketSet = new HashSet<Ticket>();
         try {
-            String sql = "SELECT * FROM tickets WHERE employee = ?;";
+            String sql = "SELECT * FROM tickets WHERE employee = ? ORDER BY date_submitted;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userID);
             ResultSet results = pstmt.executeQuery();
@@ -127,12 +127,11 @@ public class TicketDao {
 
     public Ticket getNextTicketInQueue() {
         try {
+            //TODO: what if there are no pending tickets?
             String sql = "SELECT * FROM tickets WHERE status = 'pending' ORDER BY date_submitted LIMIT 1;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             ResultSet results = pstmt.executeQuery();
             results.next();
-            System.out.println("Results:");
-            System.out.println(results);
             Ticket ticket = new Ticket(
                         results.getInt("ticket_id"),
                         results.getInt("employee"),

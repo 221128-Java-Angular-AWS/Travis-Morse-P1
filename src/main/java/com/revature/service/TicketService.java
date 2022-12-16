@@ -22,9 +22,11 @@ public class TicketService {
 
     public Ticket getNextTicketInQueue() { return ticketDao.getNextTicketInQueue(); }
 
-    public Set<Ticket> getUserTicketSet(Integer userID) {
-        return ticketDao.getUserTicketSet(userID);
-    }
+    public Set<Ticket> getPreviousTickets(Integer userID) { return ticketDao.getPreviousTickets(userID); }
+
+//    public Set<Ticket> getUserTicketSet(Integer userID) {
+//        return ticketDao.getUserTicketSet(userID);
+//    }
 
     public void updateTicket(Ticket ticket) {
         ticketDao.update(ticket);
