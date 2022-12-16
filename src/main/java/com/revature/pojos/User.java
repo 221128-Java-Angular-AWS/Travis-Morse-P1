@@ -15,11 +15,18 @@ public class User {
     public User() {
     }
 
-    public User(Integer userID, String firstName, String lastName, String role, String email, String password) {
+    public User(String firstName, String lastName, String email, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = "employee";
+        this.email = email;
+        this.password = password;
+    }
+    public User(Integer userID, String firstName, String lastName, String email, String password) {
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
+        this.role = "employee";
         this.email = email;
         this.password = password;
     }

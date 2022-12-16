@@ -28,7 +28,6 @@ public class UserDao {
                     results.getInt("user_id"),
                     results.getString("first_name"),
                     results.getString("last_name"),
-                    results.getString("role"),
                     results.getString("email"),
                     results.getString("password")
             );
