@@ -12,8 +12,14 @@ public class TicketService {
         this.ticketDao = ticketDao;
     }
 
-    public void createNewTicket(Ticket ticket) {
-        ticketDao.create(ticket);
+    public Boolean createNewTicket(Ticket ticket) {
+
+        if (ticket.getAmount() == null || ticket.getDescription() == null) {
+            return false;
+        } else {
+            ticketDao.create(ticket);
+            return true;
+        }
     }
 
     public Ticket getTicketById(Integer ticketID) {

@@ -50,8 +50,11 @@ public class Main
         webApp.post("/createNewTicket", ctx -> {
             TicketService ticketService = new TicketService(new TicketDao());
             Ticket ticket = ctx.bodyAsClass(Ticket.class);
-            ticketService.createNewTicket(ticket);
-            ctx.status(201);
+            if (ticketService.createNewTicket(ticket)) {
+                ctx.status(201);
+            } else {
+                ctx.status(400);
+            }
         });
 
         webApp.put("/updateTicketStatus", ctx -> {
