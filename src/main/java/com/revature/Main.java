@@ -1,5 +1,6 @@
 package com.revature;
 
+import com.revature.Javalin.JavalinConnection;
 import com.revature.persistence.TicketDao;
 import com.revature.persistence.UserDao;
 import com.revature.pojos.Ticket;
@@ -19,66 +20,8 @@ public class Main
     public static void main( String[] args )
     {
 
-        Javalin webApp = Javalin.create().start();
+        Javalin javalin = JavalinConnection.getJavalinConnection();
 
-        webApp.get("/ping", (ctx) -> {
-            ctx.result("Pong!");
-            ctx.status(200);
-        });
-
-        webApp.get("/getUser", ctx -> {
-            String id = ctx.queryParam("user_id");
-            UserService userService = new UserService(new UserDao());
-            ctx.json(userService.getUserByID(Integer.parseInt(id)));
-            ctx.status(200);
-        });
-
-        webApp.get("/checkEmailAvailable", ctx -> {
-            String email = ctx.queryParam("email");
-            UserService userService = new UserService(new UserDao());
-            ctx.json(userService.checkEmailAvailable(email));
-            ctx.status(200);
-        });
-
-        webApp.post("/createNewUser", ctx -> {
-            UserService userService = new UserService(new UserDao());
-            User user = ctx.bodyAsClass(User.class);
-            userService.createNewUser(user);
-            ctx.status(201);
-        });
-
-        webApp.post("/createNewTicket", ctx -> {
-            TicketService ticketService = new TicketService(new TicketDao());
-            Ticket ticket = ctx.bodyAsClass(Ticket.class);
-            if (ticketService.createNewTicket(ticket)) {
-                ctx.status(201);
-            } else {
-                ctx.status(400);
-            }
-        });
-
-        webApp.put("/updateTicketStatus", ctx -> {
-            TicketService ticketService = new TicketService(new TicketDao());
-            Integer ticketID = Integer.parseInt(ctx.queryParam("ticketID"));
-            String status = ctx.queryParam("status");
-            Integer reviewedBy = Integer.parseInt(ctx.queryParam("reviewedBy"));
-            Ticket ticket = ticketService.getTicketById(ticketID);
-            ticketService.updateTicketStatus(ticket, status, reviewedBy);
-            ctx.status(200);
-        });
-
-        webApp.get("/getNextTicketInQueue", ctx -> {
-            TicketService ticketService = new TicketService(new TicketDao());
-            ctx.json(ticketService.getNextTicketInQueue());
-            ctx.status(200);
-        });
-
-        webApp.get("/getPreviousTickets", ctx -> {
-           TicketService ticketService = new TicketService(new TicketDao());
-           Integer userID = Integer.parseInt(ctx.queryParam("userID"));
-           ctx.json(ticketService.getPreviousTickets(userID));
-           ctx.status(200);
-        });
     }
 }
 
