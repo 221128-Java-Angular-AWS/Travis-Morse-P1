@@ -21,7 +21,7 @@ public class TicketDao {
         try {
             System.out.println("Ticket received at dao:");
             System.out.println(ticket);
-            String sql = "INSERT INTO tickets (employee, amount, description, status, date_submitted) VALUES (?, ?, ?, ?, ?);";
+            String sql = "INSERT INTO tickets (employee, amount, description, status, date_submitted, category) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, ticket.getEmployee());
             pstmt.setFloat(2, ticket.getAmount());
@@ -29,6 +29,7 @@ public class TicketDao {
             pstmt.setString(4, ticket.getStatus());
             pstmt.setDate(5, ticket.getDateSubmitted());
 //            pstmt.setInt(6, ticket.getReviewedBy());
+            pstmt.setString(6, ticket.getCategory());
             pstmt.executeUpdate();
 
 
@@ -80,7 +81,8 @@ public class TicketDao {
                         results.getString("description"),
                         results.getString("status"),
                         results.getDate("date_submitted"),
-                        results.getInt("reviewed_by")
+                        results.getInt("reviewed_by"),
+                        results.getString("category")
                 ));
             }
         } catch (SQLException e) {
@@ -133,13 +135,14 @@ public class TicketDao {
             ResultSet results = pstmt.executeQuery();
             results.next();
             Ticket ticket = new Ticket(
-                        results.getInt("ticket_id"),
-                        results.getInt("employee"),
-                        results.getFloat("amount"),
-                        results.getString("description"),
-                        results.getString("status"),
-                        results.getDate("date_submitted"),
-                        results.getInt("reviewed_by")
+                    results.getInt("ticket_id"),
+                    results.getInt("employee"),
+                    results.getFloat("amount"),
+                    results.getString("description"),
+                    results.getString("status"),
+                    results.getDate("date_submitted"),
+                    results.getInt("reviewed_by"),
+                    results.getString("category")
                 );
 
             return ticket;

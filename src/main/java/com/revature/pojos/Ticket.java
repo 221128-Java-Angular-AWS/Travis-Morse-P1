@@ -12,6 +12,8 @@ public class Ticket {
     private Date dateSubmitted;
     private Integer reviewedBy;
 
+    private String category;
+
     public Ticket(){
         this.status = "pending";
         java.util.Date today = new java.util.Date();
@@ -26,7 +28,7 @@ public class Ticket {
         java.util.Date today = new java.util.Date();
         this.dateSubmitted = new Date(today.getTime());
     }
-    public Ticket(Integer ticketID, Integer employee, Float amount, String description, String status, Date dateSubmitted, Integer reviewedBy) {
+    public Ticket(Integer ticketID, Integer employee, Float amount, String description, String status, Date dateSubmitted, Integer reviewedBy, String category) {
         this.ticketID = ticketID;
         this.employee = employee;
         this.amount = amount;
@@ -34,6 +36,7 @@ public class Ticket {
         this.status = status;
         this.dateSubmitted = dateSubmitted;
         this.reviewedBy = reviewedBy;
+        this.category = category;
     }
 
     public Integer getTicketID() {
@@ -92,17 +95,25 @@ public class Ticket {
         this.reviewedBy = reviewedBy;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Ticket ticket = (Ticket) o;
-        return Objects.equals(ticketID, ticket.ticketID) && Objects.equals(employee, ticket.employee) && Objects.equals(amount, ticket.amount) && Objects.equals(description, ticket.description) && Objects.equals(status, ticket.status) && Objects.equals(dateSubmitted, ticket.dateSubmitted) && Objects.equals(reviewedBy, ticket.reviewedBy);
+        return Objects.equals(ticketID, ticket.ticketID) && Objects.equals(employee, ticket.employee) && Objects.equals(amount, ticket.amount) && Objects.equals(description, ticket.description) && Objects.equals(status, ticket.status) && Objects.equals(dateSubmitted, ticket.dateSubmitted) && Objects.equals(reviewedBy, ticket.reviewedBy) && Objects.equals(category, ticket.category);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ticketID, employee, amount, description, status, dateSubmitted, reviewedBy);
+        return Objects.hash(ticketID, employee, amount, description, status, dateSubmitted, reviewedBy, category);
     }
 
     @Override
@@ -115,6 +126,7 @@ public class Ticket {
                 ", status='" + status + '\'' +
                 ", dateSubmitted=" + dateSubmitted +
                 ", reviewedBy=" + reviewedBy +
+                ", category=" + category +
                 '}';
     }
 }
