@@ -37,6 +37,8 @@ public class JavalinConnection {
         javalinConnection.put("/updateTicketStatus", JavalinConnection::updateTicketStatus);
         javalinConnection.get("/getNextTicketInQueue", JavalinConnection::getNextTicketInQueue);
         javalinConnection.get("/getPreviousTickets", JavalinConnection::getPreviousTickets);
+        javalinConnection.get("/promoteUserByID", JavalinConnection::promoteUserByID);
+
     }
 
     public static void ping(Context ctx) {
@@ -60,6 +62,12 @@ public class JavalinConnection {
         User user = ctx.bodyAsClass(User.class);
         userService.createNewUser(user);
         ctx.status(201);
+    }
+
+    public static void promoteUserByID(Context ctx) {
+        User user = userService.getUserByID(Integer.parseInt(ctx.queryParam("userID")));
+        user.setRole("manager");
+        userService.updateUser(user);
     }
 
     public static void createNewTicket(Context ctx) {

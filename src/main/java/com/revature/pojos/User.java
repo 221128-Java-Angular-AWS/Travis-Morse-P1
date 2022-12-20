@@ -12,9 +12,7 @@ public class User {
     private String password;
 
 
-    public User() {
-        System.out.println("Default constructor");
-    }
+    public User() {}
 
     public User(String firstName, String lastName, String email, String password) {
         System.out.println("4 args constructor");

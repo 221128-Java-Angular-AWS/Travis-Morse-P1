@@ -103,13 +103,14 @@ public class UserDao {
 
     public void update(User user) {
         try {
-            String sql = "UPDATE users SET first_name = ?, last_name = ?, role = ?, email = ?, password = ?;";
+            String sql = "UPDATE users SET first_name = ?, last_name = ?, role = ?, email = ?, password = ? WHERE user_id = ?;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getRole());
             pstmt.setString(4, user.getEmail());
             pstmt.setString(5, user.getPassword());
+            pstmt.setInt(6, user.getUserID());
             pstmt.executeUpdate();
 
 

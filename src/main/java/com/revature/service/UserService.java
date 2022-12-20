@@ -24,7 +24,7 @@ public class UserService {
         return userDao.read(userID);
     }
 
-    public void updateUserByID(User user) {
+    public void updateUser(User user) {
         userDao.update(user);
     }
 
