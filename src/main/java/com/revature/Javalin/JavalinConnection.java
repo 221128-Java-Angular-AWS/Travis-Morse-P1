@@ -37,6 +37,7 @@ public class JavalinConnection {
         javalinConnection.get("/user/email", JavalinConnection::checkEmailAvailable);
         javalinConnection.get("/ticket/next", JavalinConnection::getNextTicketInQueue);
         javalinConnection.get("/ticket/history", JavalinConnection::getPreviousTickets);
+        javalinConnection.get("/ticket/history/status", JavalinConnection::getPreviousTicketsByStatus);
         javalinConnection.get("/user/promotion", JavalinConnection::promoteUserByID);
 
         javalinConnection.post("/user/new", JavalinConnection::createNewUser);
@@ -197,11 +198,29 @@ public class JavalinConnection {
                 ctx.result("Invalid authorization.");
                 ctx.status(403);
             }
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
             ctx.status(403);
         }
+    }
+
+    public static void getPreviousTicketsByStatus(Context ctx) {
+        try {
+            if (ctx.cookie("auth").equals("employee")) {
+                Integer userID = Integer.parseInt(ctx.queryParam("userID"));
+                String status = ctx.queryParam("status");
+                ctx.json(ticketService.getPreviousTicketsByStatus(userID, status));
+                ctx.status(200);
+            } else {
+                ctx.result("Invalid authorization.");
+                ctx.status(403);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(403);
+        }
+    }
+
 
 //    public static void addHashedPassword(Context ctx) throws NoSuchAlgorithmException {
 //        Integer userID = Integer.parseInt(ctx.queryParam("userID"));
@@ -209,5 +228,4 @@ public class JavalinConnection {
 //        userService.addHashedPassword(userID, password);
 //        ctx.status(200);
 //    }
-    }
 }

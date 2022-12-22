@@ -89,6 +89,34 @@ public class TicketDao {
         }
         return userTicketSet;
     }
+    public Set<Ticket> getPreviousTicketsByStatus(Integer userID, String status) {
+        Set<Ticket> userTicketSet = new HashSet<Ticket>();
+        try {
+            String sql = "SELECT * FROM tickets WHERE employee = ? AND status = ? ORDER BY date_submitted;";
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, userID);
+            pstmt.setString(2, status);
+            ResultSet results = pstmt.executeQuery();
+
+            while (results.next()) {
+                userTicketSet.add(new Ticket(
+                        results.getInt("ticket_id"),
+                        results.getInt("employee"),
+                        results.getFloat("amount"),
+                        results.getString("description"),
+                        results.getString("status"),
+                        results.getDate("date_submitted"),
+                        results.getInt("reviewed_by"),
+                        results.getString("category")
+                ));
+            }
+        } catch (SQLException e) {
+            //TODO: update exception handling
+            throw new RuntimeException(e);
+        }
+        return userTicketSet;
+    }
+
 
     public void update(Ticket ticket) {
         try {
