@@ -3,6 +3,8 @@ package com.revature.service;
 import com.revature.persistence.UserDao;
 import com.revature.pojos.User;
 
+import java.security.NoSuchAlgorithmException;
+
 public class UserService {
 
     private UserDao userDao;
@@ -31,4 +33,6 @@ public class UserService {
     public void deleteUserByID(Integer userID) {
         userDao.delete(userID);
     }
+
+//    public void addHashedPassword(Integer userID, String password) throws NoSuchAlgorithmException { userDao.addHashedPassword(userID, password); }
 }

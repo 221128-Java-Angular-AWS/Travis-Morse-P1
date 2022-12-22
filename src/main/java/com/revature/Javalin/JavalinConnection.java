@@ -9,6 +9,8 @@ import com.revature.service.UserService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+import java.security.NoSuchAlgorithmException;
+
 public class JavalinConnection {
 
     private static Javalin javalinConnection;
@@ -33,14 +35,19 @@ public class JavalinConnection {
         javalinConnection.get("/user/auth", JavalinConnection::authenticateUser);
         javalinConnection.get("/user", JavalinConnection::getUser);
         javalinConnection.get("/user/email", JavalinConnection::checkEmailAvailable);
-        javalinConnection.post("/user/new", JavalinConnection::createNewUser);
-        javalinConnection.post("/ticket/new", JavalinConnection::createNewTicket);
-        javalinConnection.put("/ticket/status", JavalinConnection::updateTicketStatus);
         javalinConnection.get("/ticket/next", JavalinConnection::getNextTicketInQueue);
         javalinConnection.get("/ticket/history", JavalinConnection::getPreviousTickets);
         javalinConnection.get("/user/promotion", JavalinConnection::promoteUserByID);
 
+        javalinConnection.post("/user/new", JavalinConnection::createNewUser);
+        javalinConnection.post("/ticket/new", JavalinConnection::createNewTicket);
+//        javalinConnection.post("/addHash", JavalinConnection::addHashedPassword);
+
+
+        javalinConnection.put("/ticket/status", JavalinConnection::updateTicketStatus);
+
     }
+
 
     public static void ping(Context ctx) {
         ctx.result("Pong!");
@@ -195,5 +202,12 @@ public class JavalinConnection {
             e.printStackTrace();
             ctx.status(403);
         }
+
+//    public static void addHashedPassword(Context ctx) throws NoSuchAlgorithmException {
+//        Integer userID = Integer.parseInt(ctx.queryParam("userID"));
+//        String password = ctx.queryParam("password");
+//        userService.addHashedPassword(userID, password);
+//        ctx.status(200);
+//    }
     }
 }

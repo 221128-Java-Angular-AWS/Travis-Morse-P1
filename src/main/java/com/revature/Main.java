@@ -9,6 +9,10 @@ import com.revature.service.TicketService;
 import com.revature.service.UserService;
 import io.javalin.Javalin;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Scanner;
 
 /**
@@ -17,8 +21,7 @@ import java.util.Scanner;
  */
 public class Main
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws NoSuchAlgorithmException {
 
         Javalin javalin = JavalinConnection.getJavalinConnection();
 

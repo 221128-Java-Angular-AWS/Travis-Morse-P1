@@ -2,6 +2,9 @@ package com.revature.persistence;
 
 import com.revature.pojos.User;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -132,5 +135,19 @@ public class UserDao {
             throw new RuntimeException(e);
         }
     }
+
+//    public void addHashedPassword(Integer userID, String password) throws NoSuchAlgorithmException {
+//        try {
+//            MessageDigest md = MessageDigest.getInstance("SHA-512");
+//            byte[] hashedPassword = md.digest("freebird".getBytes(StandardCharsets.UTF_8));
+//            String sql = "UPDATE users SET hashed_password = ? WHERE user_id = ?;";
+//            PreparedStatement pstmt = connection.prepareStatement(sql);
+//            pstmt.setString(1, hashedPassword.toString());
+//            pstmt.setInt(2, userID);
+//            pstmt.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
 
