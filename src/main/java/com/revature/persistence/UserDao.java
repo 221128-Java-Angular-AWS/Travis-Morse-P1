@@ -15,27 +15,28 @@ public class UserDao {
         this.connection = ConnectionManager.getConnection();
     }
 
-    public Boolean authenticateUser(String email, String password) {
+    public String authenticateUser(User user) {
         // TODO: hash and salt?
         try {
             String sql = "SELECT * FROM users WHERE email = ?;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, email);
+            pstmt.setString(1, user.getEmail());
             ResultSet results = pstmt.executeQuery();
+            results.next();
             // TODO: create userNotFound exception and check results.next()
 
-            User user = new User(
-                    results.getInt("user_id"),
-                    results.getString("first_name"),
-                    results.getString("last_name"),
-                    results.getString("email"),
-                    results.getString("password")
-            );
+//            User user = new User(
+//                    results.getInt("user_id"),
+//                    results.getString("first_name"),
+//                    results.getString("last_name"),
+//                    results.getString("email"),
+//                    results.getString("password")
+//            );
             // TODO: create incorrectPassword exception and implement
-            if (password.equals(user.getPassword())) {
-                return true;
+            if (results.getString("password").equals(user.getPassword())) {
+                return results.getString("role");
             } else {
-                return false;
+                return null;
             }
 
         } catch (SQLException e) {

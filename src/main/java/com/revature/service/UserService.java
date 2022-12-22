@@ -11,8 +11,8 @@ public class UserService {
         this.userDao = userDao;
     }
 
-    public Boolean authenticateUser(String email, String password) {
-        return userDao.authenticateUser(email, password);
+    public String authenticateUser(User user) {
+        return userDao.authenticateUser(user);
     }
 
     public void createNewUser(User user) {

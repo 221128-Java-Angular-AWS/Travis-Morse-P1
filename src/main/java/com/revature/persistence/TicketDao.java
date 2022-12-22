@@ -19,8 +19,6 @@ public class TicketDao {
 
     public void create(Ticket ticket) {
         try {
-            System.out.println("Ticket received at dao:");
-            System.out.println(ticket);
             String sql = "INSERT INTO tickets (employee, amount, description, status, date_submitted, category) VALUES (?, ?, ?, ?, ?, ?);";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, ticket.getEmployee());

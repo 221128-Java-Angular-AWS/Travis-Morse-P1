@@ -30,14 +30,15 @@ public class JavalinConnection {
         javalinConnection = Javalin.create().start();
 
         javalinConnection.get("/ping", JavalinConnection::ping);
-        javalinConnection.get("/getUser", JavalinConnection::getUser);
-        javalinConnection.get("/checkEmailAvailable", JavalinConnection::checkEmailAvailable);
-        javalinConnection.post("/createNewUser", JavalinConnection::createNewUser);
-        javalinConnection.post("/createNewTicket", JavalinConnection::createNewTicket);
-        javalinConnection.put("/updateTicketStatus", JavalinConnection::updateTicketStatus);
-        javalinConnection.get("/getNextTicketInQueue", JavalinConnection::getNextTicketInQueue);
-        javalinConnection.get("/getPreviousTickets", JavalinConnection::getPreviousTickets);
-        javalinConnection.get("/promoteUserByID", JavalinConnection::promoteUserByID);
+        javalinConnection.get("/user/auth", JavalinConnection::authenticateUser);
+        javalinConnection.get("/user", JavalinConnection::getUser);
+        javalinConnection.get("/user/email", JavalinConnection::checkEmailAvailable);
+        javalinConnection.post("/user/new", JavalinConnection::createNewUser);
+        javalinConnection.post("/ticket/new", JavalinConnection::createNewTicket);
+        javalinConnection.put("/ticket/status", JavalinConnection::updateTicketStatus);
+        javalinConnection.get("/ticket/next", JavalinConnection::getNextTicketInQueue);
+        javalinConnection.get("/ticket/history", JavalinConnection::getPreviousTickets);
+        javalinConnection.get("/user/promotion", JavalinConnection::promoteUserByID);
 
     }
 
@@ -46,56 +47,153 @@ public class JavalinConnection {
         ctx.status(200);
     }
 
+    public static void authenticateUser(Context ctx) {
+        try {
+            User user = ctx.bodyAsClass(User.class);
+            String auth = userService.authenticateUser(user);
+            if (auth.equals("manager") || auth.equals("employee")) {
+                ctx.cookie("auth", auth);
+                ctx.status(200);
+            } else {
+                ctx.result("Please ensure email and password are typed correctly.");
+                ctx.status(403);
+            }
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.result("Please ensure email and password are typed correctly.");
+            ctx.status(403);
+        }
+    }
     public static void getUser(Context ctx) {
-        String id = ctx.queryParam("user_id");
-        ctx.json(userService.getUserByID(Integer.parseInt(id)));
-        ctx.status(200);
-    }
-
-    public static void checkEmailAvailable(Context ctx) {
-        String email = ctx.queryParam("email");
-        ctx.json(userService.checkEmailAvailable(email));
-        ctx.status(200);
-    }
-
-    public static void createNewUser(Context ctx) {
-        User user = ctx.bodyAsClass(User.class);
-        userService.createNewUser(user);
-        ctx.status(201);
-    }
-
-    public static void promoteUserByID(Context ctx) {
-        User user = userService.getUserByID(Integer.parseInt(ctx.queryParam("userID")));
-        user.setRole("manager");
-        userService.updateUser(user);
-    }
-
-    public static void createNewTicket(Context ctx) {
-        Ticket ticket = ctx.bodyAsClass(Ticket.class);
-        if (ticketService.createNewTicket(ticket)) {
-            ctx.status(201);
-        } else {
+        try {
+            String id = ctx.queryParam("user_id");
+            ctx.json(userService.getUserByID(Integer.parseInt(id)));
+            ctx.status(200);
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
             ctx.status(400);
         }
     }
 
+    public static void checkEmailAvailable(Context ctx) {
+        try {
+            String email = ctx.queryParam("email");
+            if (userService.checkEmailAvailable(email)) {
+                ctx.result("That email is available!");
+            } else {
+                ctx.result("That email is not available.");
+            }
+                ctx.status(200);
+//            ctx.json(userService.checkEmailAvailable(email));
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(400);
+        }
+    }
+
+    public static void createNewUser(Context ctx) {
+        try {
+            User user = ctx.bodyAsClass(User.class);
+            userService.createNewUser(user);
+            ctx.status(201);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            ctx.status(400);
+        }
+    }
+
+    public static void promoteUserByID(Context ctx) {
+        try {
+            if (ctx.cookie("auth").equals("manager")) {
+                User user = userService.getUserByID(Integer.parseInt(ctx.queryParam("userID")));
+                user.setRole("manager");
+                userService.updateUser(user);
+                ctx.status(200);
+            } else {
+                ctx.result("Invalid authorization.");
+                ctx.status(403);
+            }
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(403);
+        }
+    }
+
+    public static void createNewTicket(Context ctx) {
+        try {
+            if (ctx.cookie("auth").equals("employee")) {
+                Ticket ticket = ctx.bodyAsClass(Ticket.class);
+                if (ticketService.createNewTicket(ticket)) {
+                    ctx.status(201);
+                } else {
+                    ctx.status(400);
+                }
+            } else {
+                ctx.result("Invalid authorization.");
+                ctx.status(403);
+            }
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(403);
+        }
+    }
+
     public static void updateTicketStatus(Context ctx) {
-        Integer ticketID = Integer.parseInt(ctx.queryParam("ticketID"));
-        String status = ctx.queryParam("status");
-        Integer reviewedBy = Integer.parseInt(ctx.queryParam("reviewedBy"));
-        Ticket ticket = ticketService.getTicketById(ticketID);
-        ticketService.updateTicketStatus(ticket, status, reviewedBy);
-        ctx.status(200);
+        try {
+            if (ctx.cookie("auth").equals("manager")) {
+                Integer ticketID = Integer.parseInt(ctx.queryParam("ticketID"));
+                String status = ctx.queryParam("status");
+                Integer reviewedBy = Integer.parseInt(ctx.queryParam("reviewedBy"));
+                Ticket ticket = ticketService.getTicketById(ticketID);
+                ticketService.updateTicketStatus(ticket, status, reviewedBy);
+                ctx.status(200);
+            } else {
+                ctx.result("Invalid authorization.");
+                ctx.status(403);
+            }
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(403);
+        }
     }
 
     public static void getNextTicketInQueue(Context ctx) {
-        ctx.json(ticketService.getNextTicketInQueue());
-        ctx.status(200);
+        try {
+            if (ctx.cookie("auth").equals("manager")) {
+                ctx.json(ticketService.getNextTicketInQueue());
+                ctx.status(200);
+            } else {
+                ctx.result("Invalid authorization.");
+                ctx.status(403);
+            }
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(403);
+        }
     }
 
     public static void getPreviousTickets(Context ctx) {
-        Integer userID = Integer.parseInt(ctx.queryParam("userID"));
-        ctx.json(ticketService.getPreviousTickets(userID));
-        ctx.status(200);
+        try {
+            if (ctx.cookie("auth").equals("employee")) {
+                Integer userID = Integer.parseInt(ctx.queryParam("userID"));
+                ctx.json(ticketService.getPreviousTickets(userID));
+                ctx.status(200);
+            } else {
+                ctx.result("Invalid authorization.");
+                ctx.status(403);
+            }
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            ctx.status(403);
+        }
     }
 }
