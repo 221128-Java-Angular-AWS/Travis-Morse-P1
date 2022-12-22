@@ -2,9 +2,9 @@ package com.revature.persistence;
 
 import com.revature.pojos.User;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+//import java.nio.charset.StandardCharsets;
+//import java.security.MessageDigest;
+//import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,23 +19,14 @@ public class UserDao {
     }
 
     public String authenticateUser(User user) {
-        // TODO: hash and salt?
+        // TODO: hash passwords
         try {
             String sql = "SELECT * FROM users WHERE email = ?;";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user.getEmail());
             ResultSet results = pstmt.executeQuery();
             results.next();
-            // TODO: create userNotFound exception and check results.next()
-
-//            User user = new User(
-//                    results.getInt("user_id"),
-//                    results.getString("first_name"),
-//                    results.getString("last_name"),
-//                    results.getString("email"),
-//                    results.getString("password")
-//            );
-            // TODO: create incorrectPassword exception and implement
+            // TODO: create userNotFound and incorrectPassword exceptions, and check results.next()
             if (results.getString("password").equals(user.getPassword())) {
                 return results.getString("role");
             } else {
@@ -76,7 +67,7 @@ public class UserDao {
                 return true;
             }
         } catch (SQLException e) {
-            //TODO: update exception handling
+            //TODO: improve exception handling
             throw new RuntimeException(e);
         }
     }
@@ -98,7 +89,7 @@ public class UserDao {
                 user.setPassword(results.getString("password"));
             }
         } catch (SQLException e) {
-            //TODO: update exception handling
+            //TODO: improve exception handling
             throw new RuntimeException(e);
         }
 

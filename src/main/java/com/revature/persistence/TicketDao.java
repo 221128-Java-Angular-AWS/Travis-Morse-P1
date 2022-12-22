@@ -56,7 +56,7 @@ public class TicketDao {
                 ticket.setReviewedBy(results.getInt("reviewed_by"));
             }
         } catch (SQLException e) {
-            //TODO: update exception handling
+            //TODO: improve exception handling
             throw new RuntimeException(e);
         }
 
@@ -84,7 +84,7 @@ public class TicketDao {
                 ));
             }
         } catch (SQLException e) {
-            //TODO: update exception handling
+            //TODO: improve exception handling
             throw new RuntimeException(e);
         }
         return userTicketSet;
@@ -111,7 +111,7 @@ public class TicketDao {
                 ));
             }
         } catch (SQLException e) {
-            //TODO: update exception handling
+            //TODO: improve exception handling
             throw new RuntimeException(e);
         }
         return userTicketSet;

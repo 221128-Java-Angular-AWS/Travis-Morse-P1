@@ -22,7 +22,6 @@ public class ConnectionManager {
 
     private static void connect() {
         try {
-            // TODO ask about this stuff
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             InputStream input = loader.getResourceAsStream("connection.properties");
             Properties props = new Properties();
@@ -44,8 +43,8 @@ public class ConnectionManager {
             connection = DriverManager.getConnection(builder.toString());
 
         }
-        catch (Exception e) { // TODO actually figure out exceptions
-            System.out.println("Oops, you broke it");
+        catch (Exception e) {
+            //TODO: improve exception handling
             e.printStackTrace();
         }
     }

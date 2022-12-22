@@ -3,7 +3,7 @@ package com.revature.service;
 import com.revature.persistence.UserDao;
 import com.revature.pojos.User;
 
-import java.security.NoSuchAlgorithmException;
+//import java.security.NoSuchAlgorithmException;
 
 public class UserService {
 

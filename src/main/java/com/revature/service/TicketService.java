@@ -32,10 +32,6 @@ public class TicketService {
 
     public Set<Ticket> getPreviousTicketsByStatus(Integer userID, String status) { return ticketDao.getPreviousTicketsByStatus(userID, status); }
 
-//    public Set<Ticket> getUserTicketSet(Integer userID) {
-//        return ticketDao.getUserTicketSet(userID);
-//    }
-
     public void updateTicket(Ticket ticket) {
         ticketDao.update(ticket);
     }

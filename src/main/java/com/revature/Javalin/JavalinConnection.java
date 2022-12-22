@@ -9,7 +9,7 @@ import com.revature.service.UserService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
-import java.security.NoSuchAlgorithmException;
+//import java.security.NoSuchAlgorithmException;
 
 public class JavalinConnection {
 
@@ -94,7 +94,6 @@ public class JavalinConnection {
                 ctx.result("That email is not available.");
             }
                 ctx.status(200);
-//            ctx.json(userService.checkEmailAvailable(email));
         }
         catch (NullPointerException e) {
             e.printStackTrace();
